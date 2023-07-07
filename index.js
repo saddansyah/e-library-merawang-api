@@ -3,33 +3,29 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
 
-const connectDB = require('./src/database/connection');
-
-const contactsRoute = require('./src/routes/contactsRoute');
-const articlesRoute = require('./src/routes/articlesRoute');
-// const userRouter = require('./src/routes/userRouter');
-// const notesRouter = require('./src/routes/notesRouter');
-
-const errorHandler = require('./src/middlewares/errorHandler');
-
-const app = express();
-
 // setup port
 dotenv.config({ path: ".env" })
 const PORT = process.env.PORT || 8000
 
-//logger 
-app.use(morgan('dev'));
+// DB configuration
+const connectDB = require('./src/database/connection');
+
+// API endpoints
+const booksRoute = require('./src/routes/booksRoute');
+
+// Error handler middleware
+const errorHandler = require('./src/middlewares/errorHandler');
+
+const app = express();
 
 //mongoDB connection
 connectDB();
 
-// express third party middlewares
+//Third party middlewares
+app.use(morgan('dev')); // logger
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
-
-// Use route
 app.use(cors());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -38,14 +34,16 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/api/articles', articlesRoute);
-app.use('/api/contacts', contactsRoute);
+// Use route
+app.use('/api/books', booksRoute);
 
-// middleware error handler
+// Middleware error handler
 app.use(errorHandler);
 
+// Index endpoints
 app.get('/', (req, res) => {
-  res.status(200).json({ message: "Hello Wakeguard" })
+  res.status(200).json({ message: "E-Library API (Merawang Dev Team)" })
 })
 
+// Listen port
 app.listen(PORT, () => { console.log(`Server is running on http://localhost:${PORT}`) });
