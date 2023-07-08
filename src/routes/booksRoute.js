@@ -8,8 +8,9 @@ const route = express.Router();
 // route.use(requireAuth);
 
 // Route for contacts controller
-route.get('/', controller.getAllBooks);
-route.get('/:id', controller.getBook);
+route.get('/search', controller.searchGoogleBooks);
+// route.get('/', controller.getAllBooks);
+// route.get('/:id', controller.getBook);
 route.post('/', controller.createBook);
 route.patch('/:id', controller.updateBook);
 route.delete('/:id', controller.deleteBook);

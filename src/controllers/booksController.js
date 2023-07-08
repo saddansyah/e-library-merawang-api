@@ -1,4 +1,5 @@
 const Books = require('../models/booksModel.js');
+const axios = require('axios');
 const mongoose = require('mongoose');
 const { successResponseBuilder, httpNotFound, httpBadRequest } = require('../helpers/responseBuilder');
 
@@ -118,3 +119,27 @@ exports.deleteBook = async (req, res, next) => {
     }
 
 };
+
+exports.searchGoogleBooks = async (req, res, next) => {
+    try {
+        if (!req.query.q) {
+            throw httpNotFound('You must specify the query variables')
+        }
+
+        const query = req.query.q;
+        const baseurl = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${process.env.BOOKAPIKEY}`
+
+        const json = await axios.get(baseurl, {
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+
+        const { data } = await json;
+        res.status(200).json(successResponseBuilder(data));
+
+    }
+    catch (err) {
+        next(err)
+    }
+}
