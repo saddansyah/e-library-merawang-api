@@ -9,8 +9,8 @@ const route = express.Router();
 
 // Route for contacts controller
 route.get('/search', controller.searchGoogleBooks);
-// route.get('/', controller.getAllBooks);
-// route.get('/:id', controller.getBook);
+route.get('/', controller.getAllBooks);
+route.get('/:id', controller.getBook);
 route.post('/', controller.createBook);
 route.patch('/:id', controller.updateBook);
 route.delete('/:id', controller.deleteBook);
