@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
+const path = require('path');
 
 // setup port
 dotenv.config({ path: ".env" })
@@ -22,6 +23,7 @@ const app = express();
 connectDB();
 
 //Third party middlewares
+app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use(morgan('dev')); // logger
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -43,7 +45,10 @@ app.use(errorHandler);
 // Index endpoints
 app.get('/', (req, res) => {
   res.status(200).json({ message: "E-Library API (Merawang Dev Team)" })
+  console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
 })
+
+
 
 // Listen port
 app.listen(PORT, () => { console.log(`Server is running on http://localhost:${PORT}`) });

@@ -6,7 +6,7 @@ const booksSchema = new mongoose.Schema({
         required: true,
         default: "Untitled"
     },
-    author: {
+    authors: {
         type: Array,
         required: true
     },
@@ -47,10 +47,20 @@ const booksSchema = new mongoose.Schema({
         required: true,
         default: "-"
     },
-    isPinned: {
+    isAvailable: {
         type: Boolean,
         required: true,
-        default: false
+        default: true
+    },
+    stock: {
+        type: Number,
+        required: true,
+        default: 1
+    },
+    imageUrl: {
+        type: String,
+        required: true,
+        default: 'https://www.hachette.co.nz/graphics/CoverNotAvailable.jpg'
     }
 }, { timestamps: true });
 
