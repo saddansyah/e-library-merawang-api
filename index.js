@@ -45,7 +45,6 @@ app.use(errorHandler);
 // Index endpoints
 app.get('/', (req, res) => {
   res.status(200).json({ message: "E-Library API (Merawang Dev Team)" })
-  console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
 })
 
 
