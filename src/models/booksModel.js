@@ -32,7 +32,8 @@ const booksSchema = new mongoose.Schema({
     },
     lcc: {
         type: String,
-        required: true
+        required: true,
+        default: '000'
     },
     callNumber: {
         type: String,
