@@ -13,6 +13,7 @@ const connectDB = require('./src/database/connection');
 
 // API endpoints
 const booksRoute = require('./src/routes/booksRoute');
+const borrowsRoute = require('./src/routes/borrowsRoute')
 
 // Error handler middleware
 const errorHandler = require('./src/middlewares/errorHandler');
@@ -38,6 +39,7 @@ app.use(function (req, res, next) {
 
 // Use route
 app.use('/api/books', booksRoute);
+app.use('/api/borrows', borrowsRoute);
 
 // Middleware error handler
 app.use(errorHandler);

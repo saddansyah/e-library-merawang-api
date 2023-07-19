@@ -1,29 +1,29 @@
-const Books = require('../models/booksModel.js');
-const axios = require('axios');
+const Borrows = require('../models/borrowsModel.js');
 const mongoose = require('mongoose');
 const { successResponseBuilder, httpNotFound, httpBadRequest } = require('../helpers/responseBuilder');
 
-exports.getAllBooks = async (req, res, next) => {
+exports.getAllBorrows = async (req, res, next) => {
     try {
         // const user_id = req.user.uid;
-        const books = await Books
+        const borrows = await Borrows
             .find({})
+            .populate('books')
             // .find({ user_id })
             .sort({ createdAt: -1 })
             .exec();
 
-        if (!books) {
-            throw httpNotFound('There is no such book(s) exist');
+        if (!borrows) {
+            throw httpNotFound('There is no such borrowed book(s) exist');
         }
 
-        res.status(200).json(successResponseBuilder(books));
+        res.status(200).json(successResponseBuilder(borrows));
     }
     catch (err) {
         next(err);
     }
 };
 
-exports.getBook = async (req, res, next) => {
+exports.getBorrow = async (req, res, next) => {
     try {
         const id = req.params.id;
 
@@ -32,24 +32,24 @@ exports.getBook = async (req, res, next) => {
         }
 
         // const user_id = req.user.uid;
-        const book = await Books
+        const borrow = await Borrows
             .find()
             // .find({ user_id })
             .findOne({ _id: id })
             .exec();
 
-        if (!book) {
+        if (!borrow) {
             throw httpNotFound(`Book with ID ${id} is not found`);
         }
 
-        res.status(200).json(successResponseBuilder(book));
+        res.status(200).json(successResponseBuilder(borrow));
     }
     catch (err) {
         next(err);
     }
 };
 
-exports.createBook = async (req, res, next) => {
+exports.createBorrow = async (req, res, next) => {
     try {
         if (!req.body) {
             throw httpBadRequest('All field in request body must be not empty')
@@ -57,10 +57,10 @@ exports.createBook = async (req, res, next) => {
         const body = req.body;
         // const user_id = req.user.uid;
 
-        const books = await Books
+        const borrows = await Borrows
             .create(body);
 
-        res.status(200).json(successResponseBuilder(books));
+        res.status(200).json(successResponseBuilder(borrows));
     }
     catch (err) {
         next(err);
@@ -81,15 +81,15 @@ exports.updateBook = async (req, res, next) => {
         const body = req.body;
         // const user_id = req.user.uid;
 
-        const books = await Books
+        const borrows = await Borrows
             .findOneAndUpdate({ /*user_id: user_id,*/ _id: id }, { ...body }, { returnDocument: 'after' })
             .exec();
 
-        if (!books) {
+        if (!borrows) {
             throw httpNotFound(`Book with ID ${id} is not found`);
         }
 
-        res.status(200).json(successResponseBuilder(books));
+        res.status(200).json(successResponseBuilder(borrows));
     }
     catch (err) {
         next(err);
@@ -104,15 +104,15 @@ exports.deleteBook = async (req, res, next) => {
         }
 
         const id = req.params.id;
-        const books = await Books
+        const book = await Borrows
             .findOneAndDelete({ _id: id })
             .exec();
 
-        if (!books) {
+        if (!book) {
             throw httpNotFound(`Book with ID ${id} is not found`)
         }
 
-        res.status(200).json(successResponseBuilder(books));
+        res.status(200).json(successResponseBuilder(book));
     }
     catch (err) {
         next(err);
@@ -120,26 +120,3 @@ exports.deleteBook = async (req, res, next) => {
 
 };
 
-exports.searchGoogleBooks = async (req, res, next) => {
-    try {
-        if (!req.query.q) {
-            throw httpNotFound('You must specify the query variables')
-        }
-
-        const query = req.query.q;
-        const baseurl = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${process.env.BOOKAPIKEY}`
-
-        const json = await axios.get(baseurl, {
-            headers: {
-                'Content-type': 'application/json'
-            }
-        });
-
-        const { data } = await json;
-        res.status(200).json(successResponseBuilder(data));
-
-    }
-    catch (err) {
-        next(err)
-    }
-}
