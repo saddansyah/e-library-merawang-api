@@ -33,9 +33,9 @@ exports.getBorrow = async (req, res, next) => {
 
         // const user_id = req.user.uid;
         const borrow = await Borrows
-            .find()
             // .find({ user_id })
             .findOne({ _id: id })
+            .populate('books')
             .exec();
 
         if (!borrow) {
@@ -58,16 +58,22 @@ exports.createBorrow = async (req, res, next) => {
         // const user_id = req.user.uid;
 
         const borrows = await Borrows
-            .create(body);
+            .create(body)
 
-        res.status(200).json(successResponseBuilder(borrows));
+        const borrow = await Borrows
+            // .find({ user_id })
+            .findOne({ _id: borrows._id })
+            .populate('books')
+            .exec();
+
+        res.status(200).json(successResponseBuilder(borrow));
     }
     catch (err) {
         next(err);
     }
 };
 
-exports.updateBook = async (req, res, next) => {
+exports.updateBorrow = async (req, res, next) => {
     try {
         if (!req.body) {
             throw httpBadRequest('All field in request body must be not empty');
@@ -83,6 +89,7 @@ exports.updateBook = async (req, res, next) => {
 
         const borrows = await Borrows
             .findOneAndUpdate({ /*user_id: user_id,*/ _id: id }, { ...body }, { returnDocument: 'after' })
+            .populate('books')
             .exec();
 
         if (!borrows) {
@@ -96,7 +103,7 @@ exports.updateBook = async (req, res, next) => {
     }
 };
 
-exports.deleteBook = async (req, res, next) => {
+exports.deleteBorrow = async (req, res, next) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -106,6 +113,7 @@ exports.deleteBook = async (req, res, next) => {
         const id = req.params.id;
         const book = await Borrows
             .findOneAndDelete({ _id: id })
+            .populate('books')
             .exec();
 
         if (!book) {

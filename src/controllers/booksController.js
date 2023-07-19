@@ -33,7 +33,6 @@ exports.getBook = async (req, res, next) => {
 
         // const user_id = req.user.uid;
         const book = await Books
-            .find()
             // .find({ user_id })
             .findOne({ _id: id })
             .exec();
