@@ -24,7 +24,8 @@ const booksSchema = new mongoose.Schema({
     },
     subjects: {
         type: Array,
-        required: true
+        required: false,
+        default: 'regular'
     },
     ddc: {
         type: String,
@@ -37,7 +38,8 @@ const booksSchema = new mongoose.Schema({
     },
     callNumber: {
         type: String,
-        required: true
+        required: false,
+        default: '081393789949'
     },
     pageCount: {
         type: Number,
@@ -45,7 +47,7 @@ const booksSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: true,
+        required: false,
         default: "-"
     },
     isAvailable: {
@@ -60,7 +62,7 @@ const booksSchema = new mongoose.Schema({
     },
     imageUrl: {
         type: String,
-        required: true,
+        required: false,
         default: 'https://www.hachette.co.nz/graphics/CoverNotAvailable.jpg'
     }
 }, { timestamps: true });
