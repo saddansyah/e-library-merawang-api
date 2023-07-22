@@ -14,6 +14,7 @@ const connectDB = require('./src/database/connection');
 // API endpoints
 const booksRoute = require('./src/routes/booksRoute');
 const borrowsRoute = require('./src/routes/borrowsRoute')
+const authRoute = require('./src/routes/authRoute')
 
 // Error handler middleware
 const errorHandler = require('./src/middlewares/errorHandler');
@@ -37,7 +38,6 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
-
 // app.use(function (req, res, next) {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -50,6 +50,7 @@ app.use(cors(corsOptions));
 // Use route
 app.use('/api/books', booksRoute);
 app.use('/api/borrows', borrowsRoute);
+app.use('/api/auth', authRoute);
 
 // Middleware error handler
 app.use(errorHandler);

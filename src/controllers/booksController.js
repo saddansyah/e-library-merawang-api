@@ -59,7 +59,7 @@ exports.createBook = async (req, res, next) => {
         const books = await Books
             .create(body);
 
-        res.status(200).json(successResponseBuilder(books));
+        res.status(201).json(successResponseBuilder(books));
     }
     catch (err) {
         next(err);
@@ -88,7 +88,7 @@ exports.updateBook = async (req, res, next) => {
             throw httpNotFound(`Book with ID ${id} is not found`);
         }
 
-        res.status(200).json(successResponseBuilder(books));
+        res.status(201).json(successResponseBuilder(books));
     }
     catch (err) {
         next(err);
@@ -111,7 +111,7 @@ exports.deleteBook = async (req, res, next) => {
             throw httpNotFound(`Book with ID ${id} is not found`)
         }
 
-        res.status(200).json(successResponseBuilder(books));
+        res.status(201).json(successResponseBuilder(books));
     }
     catch (err) {
         next(err);

@@ -1,13 +1,11 @@
 const express = require('express');
 const controller = require('../controllers/borrowsController');
-// const requireAuth = require('../middlewares/requireAuth');
+const auth = require('../middlewares/auth');
 
 const route = express.Router();
 
-// Middleware firebase admin
-// route.use(requireAuth);
-
 // Route for contacts controller
+route.use(auth.authenticate);
 route.get('/', controller.getAllBorrows);
 route.get('/:id', controller.getBorrow);
 route.post('/', controller.createBorrow);

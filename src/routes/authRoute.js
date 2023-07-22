@@ -1,17 +1,13 @@
 const express = require('express');
-const controller = require('../controllers/booksController');
-const auth = require('../middlewares/auth');
+const controller = require('../controllers/authController');
 
 const route = express.Router();
 
-// Route for contacts controller
-route.get('/search', controller.searchGoogleBooks);
-route.get('/:id', controller.getBook);
-route.get('/', controller.getAllBooks);
+// Middleware firebase admin
 
-route.post('/', auth.authenticate, controller.createBook);
-route.patch('/:id', auth.authenticate, controller.updateBook);
-route.delete('/:id', auth.authenticate, controller.deleteBook);
+// Route for contacts controller
+route.post('/signup', controller.signup);
+route.post('/signin', controller.signin);
 
 // Route error handler
 route.patch('/', (req, res, next) => {
