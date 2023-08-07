@@ -1,4 +1,5 @@
 const Borrows = require('../models/borrowsModel.js');
+const Books = require('../models/booksModel.js');
 const mongoose = require('mongoose');
 const { successResponseBuilder, httpNotFound, httpBadRequest } = require('../helpers/responseBuilder');
 
@@ -60,6 +61,17 @@ exports.createBorrow = async (req, res, next) => {
         const borrows = await Borrows
             .create(body)
 
+        //Update book
+        const { _id, stock } = await Books
+            .findOne({ _id: body.books })
+            .exec();
+
+        let lastStock = stock - 1;
+
+        const books = await Books
+            .findOneAndUpdate({ /*user_id: user_id,*/ _id: _id }, { stock: lastStock }, { returnDocument: 'after' })
+            .exec();
+
         const borrow = await Borrows
             // .find({ user_id })
             .findOne({ _id: borrows._id })
@@ -111,16 +123,27 @@ exports.deleteBorrow = async (req, res, next) => {
         }
 
         const id = req.params.id;
-        const book = await Borrows
+
+        const borrow = await Borrows
             .findOneAndDelete({ _id: id })
             .populate('books')
             .exec();
 
-        if (!book) {
-            throw httpNotFound(`Book with ID ${id} is not found`)
+        const { _id, stock } = await Books
+            .findOne({ _id: borrow.books._id })
+            .exec();
+
+        let lastStock = stock + 1;
+
+        const books = await Books
+            .findOneAndUpdate({ /*user_id: user_id,*/ _id: _id }, { stock: lastStock }, { returnDocument: 'after' })
+            .exec();
+
+        if (!borrow) {
+            throw httpNotFound(`Borrow with ID ${id} is not found`)
         }
 
-        res.status(200).json(successResponseBuilder(book));
+        res.status(200).json(successResponseBuilder(borrow));
     }
     catch (err) {
         next(err);

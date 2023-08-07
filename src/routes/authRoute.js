@@ -3,8 +3,6 @@ const controller = require('../controllers/authController');
 
 const route = express.Router();
 
-// Middleware firebase admin
-
 // Route for contacts controller
 // route.post('/signup', controller.signup);
 route.post('/signin', controller.signin);
