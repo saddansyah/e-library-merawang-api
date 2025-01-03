@@ -4,7 +4,7 @@ const controller = require('../controllers/authController');
 const route = express.Router();
 
 // Route for contacts controller
-// route.post('/signup', controller.signup);
+route.post('/signup', controller.signup);
 route.post('/signin', controller.signin);
 
 // Route error handler
